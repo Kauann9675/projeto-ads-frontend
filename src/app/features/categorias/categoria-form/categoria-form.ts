@@ -68,11 +68,16 @@ export class CategoriaForm {
     } else {
       console.log("Atualizar!!")
       const atualizada = this.categoriaService
-        .atualizar(categoria.id,dados);
-      if (!atualizada){
-        this.erro = 'Categoria não encontrada para atualização.';
-        return;
-      }
+        .atualizar(categoria.id,dados).subscribe({
+          next: ()=> {
+              this.formulario.reset({descricao:'',tipo:'DESPESA',ativa:true});
+              this.salvou.emit();
+          },
+          error: erro=> {
+            this.erro = "Ocorreu um erro ao gravar";
+            console.log(erro);
+          }
+        });
     }
   }
   cancelar():void {
@@ -81,4 +86,3 @@ export class CategoriaForm {
     this.cancelou.emit();
   }
 }
-
