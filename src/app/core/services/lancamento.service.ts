@@ -1,33 +1,23 @@
-import { Injectable } from '@angular/core';
-import {
-  Lancamento,
-  LancamentoInput
-} from '../../models/lancamento.model';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { LancamentoRequest, LancamentoResponse }
+  from '../../models/lancamento.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class LancamentoService {
-  private readonly API = `${environment.apiUrl}/lancamentos`;
-
-  constructor(private http:HttpClient){}
-
-  listar(): Observable<Lancamento[]>{
-    return this.http.get<Lancamento[]>(this.API);
+  private http = inject(HttpClient);
+  private baseUrl = `${environment.apiUrl}/lancamentos`;
+  listar() {
+    return this.http.get<LancamentoResponse[]>(this.baseUrl);
   }
-
-  buscarPorId(id: number): Observable<Lancamento> {
-    return this.http.get<Lancamento>(`${this.API}/${id}`);
+  cadastrar(dados: LancamentoRequest) {
+    return this.http.post<LancamentoResponse>(this.baseUrl, dados);
   }
-
-  cadastrar(dados: LancamentoInput): Observable<Lancamento> {
-    return this.http.post<Lancamento>(this.API,dados);
+  atualizar(id: number, dados: LancamentoRequest) {
+    return this.http.put<LancamentoResponse>(`${this.baseUrl}/${id}`, dados);
   }
-
-  atualizar(id: number, dados: LancamentoInput): Observable<Lancamento> {
-    return this.http.put<Lancamento>(`${this.API}/${id}`,dados);
+  buscarPorId(id: number) {
+    return this.http.get<LancamentoResponse>(`${this.baseUrl}/${id}`);
   }
 }

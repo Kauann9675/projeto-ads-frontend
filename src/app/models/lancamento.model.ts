@@ -1,14 +1,13 @@
-import { Categoria } from "./categoria.model";
-import { Usuario } from "./usuario.model";
 
-export interface Lancamento {
-  id: number;
+export interface LancamentoRequest {
   descricao: string;
   valor: number;
-  data_lancamento: Date;
-  categoria_id: Categoria['id'];
-  usuario_id: Usuario['id'];
-
+  dataLancamento: string; // yyyy-MM-dd
+  observacao: string | null;
+  categoriaId: number;
 }
-
-export type LancamentoInput = Omit<Lancamento, 'id'>;
+export interface LancamentoResponse extends LancamentoRequest {
+  id: number;
+  categoriaDescricao: string;
+  usuarioId: number;
+}
